@@ -10,6 +10,7 @@ class GroupSeeder extends Seeder
 {
     public function run(): void
     {
+        // Cria 5 grupos econômicos de exemplo
         $groups = [
             ['name' => 'Grupo VochTech'],
             ['name' => 'Grupo Inovação Digital'],

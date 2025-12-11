@@ -11,11 +11,7 @@ class Unit extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Campos que podem ser preenchidos via mass assignment
     protected $fillable = [
         'nome_fantasia',
         'razao_social',
@@ -23,27 +19,19 @@ class Unit extends Model
         'brand_id'
     ];
 
-    /**
-     * Get the brand that owns the unit.
-     */
+    // Uma unidade pertence a uma bandeira
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
 
-    /**
-     * Get all collaborators for the unit.
-     */
+    // Uma unidade possui muitos colaboradores
     public function collaborators(): HasMany
     {
         return $this->hasMany(Collaborator::class);
     }
 
-    /**
-     * Format CNPJ for display.
-     *
-     * @return string
-     */
+    // Formata CNPJ para exibição (XX.XXX.XXX/XXXX-XX)
     public function getCnpjFormattedAttribute(): string
     {
         if (!$this->cnpj) {
@@ -63,21 +51,13 @@ class Unit extends Model
         return $this->cnpj;
     }
 
-    /**
-     * Get the group through brand.
-     *
-     * @return mixed
-     */
+    // Obtém o grupo através da bandeira
     public function group()
     {
         return $this->brand->group ?? null;
     }
 
-    /**
-     * Get the count of collaborators.
-     *
-     * @return int
-     */
+    // Conta quantos colaboradores tem nesta unidade
     public function getCollaboratorsCountAttribute(): int
     {
         return $this->collaborators()->count();

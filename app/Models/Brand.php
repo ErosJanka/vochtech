@@ -13,34 +13,28 @@ class Brand extends Model
 
     protected $fillable = ['name', 'group_id'];
 
-    /**
-     * Get the group that owns the brand.
-     */
+    // Bandeira pertence a um grupo econômico
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
     }
 
-    /**
-     * Get all units for the brand.
-     */
+    // Uma bandeira possui muitas unidades
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);
     }
 
-    /**
-     * Get the collaborators through units.
-     */
+    // Obtém colaboradores através das unidades
     public function collaborators()
     {
         return $this->hasManyThrough(
             Collaborator::class,
             Unit::class,
-            'brand_id', // Foreign key on units table
-            'unit_id',  // Foreign key on collaborators table
-            'id',       // Local key on brands table
-            'id'        // Local key on units table
+            'brand_id',
+            'unit_id',
+            'id',
+            'id'
         );
     }
 }

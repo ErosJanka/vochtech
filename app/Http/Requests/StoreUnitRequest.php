@@ -52,9 +52,14 @@ class StoreUnitRequest extends FormRequest
     /**
      * Função para validar CNPJ usando algoritmo oficial
      */
+    /**
+     * Valida CNPJ usando algoritmo oficial de dígitos verificadores
+     * 
+     * - Verifica os dois dígitos verificadores usando mod 11
+     * - Segue a regra: número inválido = resto < 2 ? 0 : 11 - resto
+     */
     private function validarCNPJ(string $cnpj): bool
     {
-        // Algoritmo de validação de CNPJ
         $digitos = str_split($cnpj);
         
         // Primeiro dígito verificador

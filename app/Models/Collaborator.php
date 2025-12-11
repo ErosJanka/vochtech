@@ -10,11 +10,7 @@ class Collaborator extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Campos que podem ser preenchidos via mass assignment
     protected $fillable = [
         'name',
         'email',
@@ -22,19 +18,13 @@ class Collaborator extends Model
         'unit_id'
     ];
 
-    /**
-     * Get the unit that owns the collaborator.
-     */
+    // Um colaborador pertence a uma unidade
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
     }
 
-    /**
-     * Format CPF for display.
-     *
-     * @return string
-     */
+    // Formata CPF para exibição (XXX.XXX.XXX-XX)
     public function getCpfFormattedAttribute(): string
     {
         if (!$this->cpf) {
@@ -53,21 +43,13 @@ class Collaborator extends Model
         return $this->cpf;
     }
 
-    /**
-     * Get the brand through unit.
-     *
-     * @return mixed
-     */
+    // Obtém a bandeira através da unidade
     public function brand()
     {
         return $this->unit->brand ?? null;
     }
 
-    /**
-     * Get the group through unit and brand.
-     *
-     * @return mixed
-     */
+    // Obtém o grupo através da unidade e bandeira
     public function group()
     {
         if ($this->unit && $this->unit->brand) {
@@ -88,13 +70,7 @@ class Collaborator extends Model
         return $query;
     }
 
-    /**
-     * Scope a query to filter by unit.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int $unitId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
+    // Filtra colaboradores por unidade
     public function scopeByUnit($query, $unitId)
     {
         if ($unitId) {

@@ -11,6 +11,7 @@ class Audit extends Model
 {
     use HasFactory;
 
+    // Define quais campos podem ser preenchidos via mass assignment
     protected $fillable = [
         'user_id',
         'auditable_type',
@@ -20,9 +21,10 @@ class Audit extends Model
         'new',
     ];
 
+    // Converte JSON para array automaticamente
     protected $casts = [
         'old' => 'array',
-        'new' => 'array',  // JSON é automaticamente convertido para array
+        'new' => 'array',
     ];
 
     public function user(): BelongsTo
@@ -30,9 +32,6 @@ class Audit extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the auditable model (Group, Brand, Unit, or Collaborator).
-     */
     public function auditable(): MorphTo
     {
         return $this->morphTo();  // Funciona com qualquer modelo (Group, Brand, Unit, Collaborator)
@@ -51,9 +50,7 @@ class Audit extends Model
         return $query->where('auditable_type', $type);
     }
 
-    /**
-     * Get readable action name.
-     */
+    // Retorna nome da ação em português para exibição
     public function getActionNameAttribute(): string
     {
         // Retorna em português para exibição na UI
@@ -65,9 +62,7 @@ class Audit extends Model
         };
     }
 
-    /**
-     * Get the auditable model name without namespace.
-     */
+    // Retorna apenas o nome do modelo sem namespace (Ex: "Group" em vez de "App\Models\Group")
     public function getModelNameAttribute(): string
     {
         return class_basename($this->auditable_type);

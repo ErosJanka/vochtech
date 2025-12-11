@@ -25,7 +25,7 @@ Siga estes passos simples para ter o sistema funcionando na sua máquina.
 ### 1. Baixe o Projeto
 Clone o repositório para o seu computador e entre na pasta criada.
 ```bash
-git clone <url-do-repositorio> vochttech
+git clone https://github.com/ErosJanka/vochtech.git
 cd vochttech
 ```
 
