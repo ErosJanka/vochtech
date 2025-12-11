@@ -54,10 +54,9 @@ class StoreCollaboratorRequest extends FormRequest
      */
     private function validarCPF(string $cpf): bool
     {
-        // Algoritmo de validação de CPF
         $digitos = str_split($cpf);
         
-        // Primeiro dígito verificador
+        // Calcula primeiro dígito verificador
         $soma = 0;
         for ($i = 0; $i < 9; $i++) {
             $soma += $digitos[$i] * (10 - $i);
@@ -70,7 +69,7 @@ class StoreCollaboratorRequest extends FormRequest
             return false;
         }
         
-        // Segundo dígito verificador
+        // Valida segundo dígito verificador
         $soma = 0;
         for ($i = 0; $i < 10; $i++) {
             $soma += $digitos[$i] * (11 - $i);

@@ -25,9 +25,9 @@ class GroupController extends Controller
     public function store(StoreGroupRequest $request)
     {
         $data = $request->validated();
-
         $brandIds = $request->input('brand_ids', []);
 
+        // Transação garante que se falhar, nada fica salvo
         DB::transaction(function () use ($data, $brandIds, &$group) {
             $group = Group::create($data);
 
