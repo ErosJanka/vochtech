@@ -77,15 +77,9 @@ class Collaborator extends Model
         return null;
     }
 
-    /**
-     * Scope a query to filter by name or email.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $search
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
     public function scopeSearch($query, $search)
     {
+        // Permite buscar por nome ou email
         if ($search) {
             return $query->where('name', 'like', "%{$search}%")
                          ->orWhere('email', 'like', "%{$search}%");

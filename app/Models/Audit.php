@@ -22,12 +22,9 @@ class Audit extends Model
 
     protected $casts = [
         'old' => 'array',
-        'new' => 'array',
+        'new' => 'array',  // JSON é automaticamente convertido para array
     ];
 
-    /**
-     * Get the user that performed the action.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -38,12 +35,9 @@ class Audit extends Model
      */
     public function auditable(): MorphTo
     {
-        return $this->morphTo();
+        return $this->morphTo();  // Funciona com qualquer modelo (Group, Brand, Unit, Collaborator)
     }
 
-    /**
-     * Scope a query to filter by action type.
-     */
     public function scopeAction($query, $action)
     {
         return $query->where('action', $action);
@@ -62,6 +56,7 @@ class Audit extends Model
      */
     public function getActionNameAttribute(): string
     {
+        // Retorna em português para exibição na UI
         return match($this->action) {
             'created' => 'Criado',
             'updated' => 'Atualizado',
