@@ -29,17 +29,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Get all audits performed by the user.
-     */
+    // Obtém todos os registros de auditoria criados por este usuário
     public function audits()
     {
         return $this->hasMany(Audit::class);
     }
 
-    /**
-     * Get the last activity of the user.
-     */
+    // Retorna o último registro de auditoria do usuário
     public function getLastActivityAttribute()
     {
         return $this->audits()->latest()->first();

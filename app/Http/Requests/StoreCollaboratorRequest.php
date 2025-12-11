@@ -50,11 +50,13 @@ class StoreCollaboratorRequest extends FormRequest
     }
 
     /**
-     * Função para validar CPF usando algoritmo oficial
+     * Valida CPF usando algoritmo oficial de dígitos verificadores
+     * 
+     * - Verifica os dois dígitos verificadores usando mod 11
+     * - Segue a regra: número inválido = resto < 2 ? 0 : 11 - resto
      */
     private function validarCPF(string $cpf): bool
     {
-        // Algoritmo de validação de CPF
         $digitos = str_split($cpf);
         
         // Primeiro dígito verificador

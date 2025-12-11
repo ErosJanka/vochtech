@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Observers do passo 12 (Group) + adicionais para atender requisito do PDF
+        // Registra observers para auditoria automática em modelos
         Group::observe(GroupObserver::class);
         Brand::observe(BrandObserver::class);
         Unit::observe(UnitObserver::class);

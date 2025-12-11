@@ -25,12 +25,13 @@ class GroupController extends Controller
     public function store(StoreGroupRequest $request)
     {
         $data = $request->validated();
-
         $brandIds = $request->input('brand_ids', []);
 
+        // Usa transação para garantir consistência: cria grupo E associa bandeiras atomicamente
         DB::transaction(function () use ($data, $brandIds, &$group) {
             $group = Group::create($data);
 
+            // Associa as bandeiras selecionadas ao novo grupo
             if (!empty($brandIds)) {
                 Brand::whereIn('id', $brandIds)->update(['group_id' => $group->id]);
             }
@@ -56,15 +57,16 @@ class GroupController extends Controller
         $data = $request->validated();
         $brandIds = $request->input('brand_ids', []);
 
+        // Transação garante que nome e bandeiras são atualizados juntos
         DB::transaction(function () use ($group, $data, $brandIds) {
             $group->update($data);
 
-            // Detach brands previously attached and not selected
+            // Remove associações de bandeiras que não estão mais selecionadas
             Brand::where('group_id', $group->id)
                 ->whereNotIn('id', $brandIds ?: [0])
                 ->update(['group_id' => null]);
 
-            // Attach selected brands
+            // Associa as bandeiras selecionadas ao grupo
             if (!empty($brandIds)) {
                 Brand::whereIn('id', $brandIds)->update(['group_id' => $group->id]);
             }
