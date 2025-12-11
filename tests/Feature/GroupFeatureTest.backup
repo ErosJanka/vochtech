@@ -1,0 +1,86 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\Group;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
+
+class GroupFeatureTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
+
+    public function test_user_can_view_groups_index(): void
+    {
+        $response = $this->get(route('groups.index'));
+        $response->assertStatus(200);
+        $response->assertViewIs('groups.index');
+    }
+
+    public function test_user_can_create_group(): void
+    {
+        $response = $this->post(route('groups.store'), [
+            'name' => 'Novo Grupo'
+        ]);
+        $response->assertRedirect(route('groups.index'));
+        $this->assertDatabaseHas('groups', ['name' => 'Novo Grupo']);
+    }
+
+    public function test_user_can_update_group(): void
+    {
+        $group = Group::factory()->create();
+        $response = $this->put(route('groups.update', $group), [
+            'name' => 'Grupo Atualizado'
+        ]);
+        $response->assertRedirect(route('groups.index'));
+        $this->assertDatabaseHas('groups', ['name' => 'Grupo Atualizado']);
+    }
+
+    public function test_user_can_delete_group(): void
+    {
+        $group = Group::factory()->create();
+        $response = $this->delete(route('groups.destroy', $group));
+        $response->assertRedirect(route('groups.index'));
+        $this->assertDatabaseMissing('groups', ['id' => $group->id]);
+    }
+
+    public function test_validation_for_group_creation(): void
+    {
+        $response = $this->post(route('groups.store'), [
+            'name' => ''
+        ]);
+        $response->assertSessionHasErrors('name');
+    }
+
+    public function test_guest_cannot_access_protected_routes(): void
+    {
+        Auth::logout();
+        $group = Group::factory()->create();
+        
+        $response = $this->get(route('groups.index'));
+        $response->assertRedirect(route('login'));
+        
+        $response = $this->get(route('groups.create'));
+        $response->assertRedirect(route('login'));
+        
+        $response = $this->post(route('groups.store'), ['name' => 'Teste']);
+        $response->assertRedirect(route('login'));
+        
+        $response = $this->put(route('groups.update', $group), ['name' => 'Atualizado']);
+        $response->assertRedirect(route('login'));
+        
+        $response = $this->delete(route('groups.destroy', $group));
+        $response->assertRedirect(route('login'));
+    }
+}
